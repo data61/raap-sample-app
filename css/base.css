@@ -4,6 +4,7 @@
 		margin: 0;
 		padding: 0;
 		box-sizing: border-box;
+		font: inherit;
 }
 html, body, main {
 		height: 100%
@@ -12,21 +13,91 @@ body {
 		font-family: 'Source Sans Pro', sans-serif;
 		background-color: #EFEFEF;
 }
-main {
+a {
+		cursor: pointer;
+}
+a:hover {
+		color: #4285f4;
+}
+label, label > input {
+		display: block;
+		margin: .5em;
+}
+input:not([type=submit]):not([type=file]) {
+		padding: .25em;
+		border: 1px solid #CCC;
+		border-radius: 4px;
+}
+
+a.button {
+		display: inline-block;
+		padding: .5em;
+		color: #FFF;
+		background-color: #3c80f6;
+		border-radius: 4px;
+		box-shadow: 2px 2px 8px #999;
+}
+a.button:hover {
+		background-color: #4C90FF;
+}
+a.button.busy {
+		background-color: inherit;
+		color: #3c80f6;
+		box-shadow: inherit;
 }
 .columns {
 		display: flex;
 }
 .columns > .column {
-		flex-grow: 1;
-		border: 1px solid #DDD;
-		background-color: #FFF;
 		margin: 2em 1em;
-		box-shadow: 2px 2px 8px #999;
 }
 .columns > .column:first-child {
 		margin-left: 2em
 }
 .columns > .column:last-child {
 		margin-right: 2em;
+}
+.box {
+		border: 1px solid #DDD;
+		background-color: #FFF;
+		box-shadow: 2px 2px 8px #999;
+}
+
+.row {
+		display: flex;
+		border-bottom: 1px solid #DDD;
+		padding: 1em;
+}
+.row:last-child {
+		border-bottom-style: none;
+}
+.panel {
+		background-color: #EEE;
+		padding: .5em;
+}
+.grow {
+		flex-grow: 1;
+}
+.centered {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+}
+.grey {
+		color: #CCC
+}
+
+input[type=number].inline, input[type=date].inline {
+		border-style: none;
+    text-align: right;
+    font-size: 1.2em;
+}
+
+.result {
+		background-color: #228562;
+}
+.result .picture {
+		padding: 3em;
+		border-radius: 50%;
+		background-color: #EEE;
 }
