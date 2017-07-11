@@ -3,11 +3,11 @@
 	var baseURL = 'https://raap.d61.io/api/v0';
 	var DOMAIN = 'demonstration';
 	var GOAL_ID = 'escalator.operation';
-	var PERMITTED = 'permitted';
-	var FORBIDDEN = 'forbidden';
-	var UNKNOWN = 'unknown';
-	var CONCLUSIVE = 'conclusive';
-	var INCOMPLETE = 'incomplete';
+	var PERMITTED = 'PERMITTED';
+	var FORBIDDEN = 'FORBIDDEN';
+	var UNKNOWN = 'UNKNOWN';
+	var CONCLUSIVE = 'CONCLUSIVE';
+	var INCOMPLETE = 'INCOMPLETE';
 	var STORAGE_KEY = 'raap_demo';
 	
 	var delegate = function(h) { return function(e) { e.preventDefault(); h(e) } }
