@@ -4,14 +4,14 @@
 	var DOMAIN = 'demonstration';
 	var GOAL_ID = 'escalator.operation';
 	var PERMITTED = 'PERMITTED';
+  var OBLIGATED = 'OBLIGATED';
 	var FORBIDDEN = 'FORBIDDEN';
 	var UNKNOWN = 'UNKNOWN';
 	var CONCLUSIVE = 'CONCLUSIVE';
-	var INCOMPLETE = 'INCOMPLETE';
 	var STORAGE_KEY = 'raap_demo';
-	
+
 	var delegate = function(h) { return function(e) { e.preventDefault(); h(e) } }
-	
+
 	var api = (function() {
 		var token = window.sessionStorage.getItem(STORAGE_KEY);
 		var getHeaders = function() { return { 'Authorization': 'Bearer ' + token } }
@@ -32,15 +32,15 @@
 						throw e
 					})
 			},
-			getAtoms: function() {
+      getAtoms: function() {
 				return m.request({ method: 'GET', url: baseURL + '/domain/'+DOMAIN+'/schema', headers: getHeaders()})
 			},
 			reason: function(values) {
-				return m.request({ method: 'POST', url: baseURL + '/domain/'+DOMAIN+'/reason?criteria=draft', data: values, headers: getHeaders()})
+				return m.request({ method: 'POST', url: baseURL + '/domain/'+DOMAIN+'/reasoning/reason?criteria=draft&known-results-only', data: values, headers: getHeaders()})
 			}
 		}
 	})();
-	
+
 	var signIn = {
 		oninit: function(v) {
 			v.state.email = ''
@@ -81,7 +81,7 @@
 		}
 		return o
 	}
-	
+
 	var demo = {
 		oninit: function(v) {
 			v.state.atoms = [];
@@ -92,13 +92,13 @@
 				m.route.set('/sign-in')
 				return
 			}
-			
+
 			api.getAtoms().then(x => v.state.atoms = x)
-			
+
 			v.state.reasoning = false;
 			v.state.reason = function(e) {
 				v.state.reasoning = true;
-				
+
 				var data = v.state.atoms.reduce(function(result, atom) {
 					return (atom.value === undefined ? result : set(result, atom.name, atom.value))
 				}, {})
@@ -114,7 +114,7 @@
 						alert('Unable to reason at this time: ' + err.message)
 						throw err
 					})
-				
+
 			}
 		},
 		view: function(v) {
@@ -159,9 +159,9 @@
 			}
 		}
 	}
-	
+
 	var atom = {
-		view: function(v) {			
+		view: function(v) {
 			return m('div.row', [
 				m('.grow', [
 					v.attrs.atom.value === undefined ? null :	m('a', { onclick: function() { delete v.attrs.atom.value } }, m('i.fa.fa-fw.fa-trash-o')),
@@ -184,11 +184,18 @@
 
 	var result = {
 		view: function(v) {
-			var permitted = v.attrs.response.find(function(x) { return x.goal.id === GOAL_ID && x.goal.modality === PERMITTED })
-			var forbidden = v.attrs.response.find(function(x) { return x.goal.id === GOAL_ID && x.goal.modality === FORBIDDEN })
-			var status = (permitted && permitted.reasoningResult === CONCLUSIVE)
-					? PERMITTED
-					: ((forbidden && forbidden.reasoningResult === CONCLUSIVE)
+
+      var status = UNKNOWN;
+
+      var escalator = v.attrs.response.escalator;
+
+      if (escalator && escalator.operation) {
+        var permitted = escalator.operation.find(x => x.goal.modality === PERMITTED);
+        var obligatedNotTo = escalator.operation.find(x => x.goal.modality === OBLIGATED && x.goal.negated === true);
+      }
+
+			status = (permitted) ? PERMITTED
+					: ((obligatedNotTo)
 						 ? FORBIDDEN
 						 : UNKNOWN);
 
@@ -199,7 +206,7 @@
 			]
 		}
 	}
-	
+
 	document.addEventListener('DOMContentLoaded', function(event) {
 		m.route(document.body, '/sign-in', {
 			'/': demo,
