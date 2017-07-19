@@ -32,7 +32,7 @@
 						throw e
 					})
 			},
-      getAtoms: function() {
+			getAtoms: function() {
 				return m.request({ method: 'GET', url: baseURL + '/domain/'+DOMAIN+'/schema', headers: getHeaders()})
 			},
 			reason: function(values) {
@@ -71,6 +71,10 @@
 		}
 	}
 
+	// Takes an object 'o', a JavaScript object path 'p' and updates the object with value 'v'.
+	// 
+	// Example:
+	// set({}, 'foo.bar.hello', 'world') == { 'foo': { 'bar': { 'hello': 'world' } } }
 	var set = function(o, p, v) {
 		var i = p.indexOf('.');
 		if (i > -1) {
@@ -173,20 +177,24 @@
 	}
 
 	var picture = {
+		onupdate: function(v) {
+			let a = v.dom.querySelector('animate')
+			if (a) {
+				a.beginElement();
+			}
+		},
 		view: function(v) {
 			return m('div.picture', v.attrs.status === UNKNOWN ? null : [
 				m('svg', { style: { height: '256px', padding: '1em' }, viewBox: '0 0 3 3' },
 					m('polygon', { fill: '#228562' },
-						m('animate', { begin: '0s', dur: v.attrs.status === PERMITTED ? '1s' : 0, repeatCount: 'indefinite', keyTimes: '0;1', attributeName: 'points', values: '3,0 2,0 2,1 1,1 1,2 0,2 0,3 0,3 0,3 3,3;3,0 3,0 3,0 2,0 2,1 1,1 1,2 0,2 0,3 3,3' })))
+						m('animate', { begin: '0s', dur: v.attrs.status === PERMITTED ? '1s' : '0', repeatCount: 'indefinite', keyTimes: '0;1', attributeName: 'points', values: '3,0 2,0 2,1 1,1 1,2 0,2 0,3 0,3 0,3 3,3;3,0 3,0 3,0 2,0 2,1 1,1 1,2 0,2 0,3 3,3' })))
 			])
 		}
 	}
 
 	var result = {
 		view: function(v) {
-
       var status = UNKNOWN;
-
       var escalator = v.attrs.response.escalator;
 
       if (escalator && escalator.operation) {
@@ -194,10 +202,7 @@
         var obligatedNotTo = escalator.operation.find(x => x.goal.modality === OBLIGATED && x.goal.negated === true);
       }
 
-			status = (permitted) ? PERMITTED
-					: ((obligatedNotTo)
-						 ? FORBIDDEN
-						 : UNKNOWN);
+			status = (permitted) ? PERMITTED : ((obligatedNotTo) ? FORBIDDEN : UNKNOWN);
 
 			return [
 				m('.row.result.centered', m(picture, { status: status })),
