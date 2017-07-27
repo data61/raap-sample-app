@@ -149,7 +149,12 @@
 					type: 'number',
 					placeholder: '_',
 					value: v.attrs.atom.value,
-					oninput: m.withAttr('value', function(x) { v.attrs.atom.value = x })
+					oninput: m.withAttr('value', function(x) {
+						let f = parseFloat(x)
+						if (f !== NaN) {
+							v.attrs.atom.value = f
+						}
+					})
 				})
 			}
 		},
