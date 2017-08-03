@@ -2,7 +2,7 @@
 
 1. Install node.js (https://nodejs.org)
 2. Install packages (`npm install` or `yarn install`)
-3. Run http-server (`yarn start`)
+3. Run http-server (`npm start` or `yarn start`)
 4. The sample app is now available at http://127.0.0.1:8080/
 
 ---
