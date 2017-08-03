@@ -1,0 +1,15 @@
+{
+  "name": "raap-sample-app",
+  "version": "1.0.0",
+  "description": "RaaP - Sample Application",
+  "main": "index.html",
+  "repository": "git@github.com:data61/raap-sample-app.git",
+  "author": "Commonwealth Scientific and Industrial Research Organisation (CSIRO) ABN 41 687 119 230",
+  "license": "MIT",
+  "dependencies": {
+    "http-server": "^0.10.0"
+  },
+  "scripts": {
+    "start": "http-server"
+  }
+}
