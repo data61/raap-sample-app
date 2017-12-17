@@ -36,7 +36,7 @@
 				return m.request({ method: 'GET', url: baseURL + '/domain/'+DOMAIN+'/schema', headers: getHeaders()})
 			},
 			reason: function(values) {
-				return m.request({ method: 'POST', url: baseURL + '/domain/'+DOMAIN+'/reasoning/reason?criteria=draft', data: values, headers: getHeaders()})
+				return m.request({ method: 'POST', url: baseURL + '/domain/'+DOMAIN+'/reasoning/reason', data: values, headers: getHeaders()})
 			}
 		}
 	})();
